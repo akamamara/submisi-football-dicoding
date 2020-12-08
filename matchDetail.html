@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#F5F5F5" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+
+    <!-- Ganti titlenya nanti -->
+    <title>football News</title>
+
+    <link rel="manifest" href="/manifest.json">
+    <link rel="stylesheet" href="css/materialize.min.css">
+    <link rel="stylesheet" href="css/styles.css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+</head>
+
+<body>
+    <!-- Header -->
+
+    <div class="home-background">
+        <!-- Navigasi -->
+        <nav class="header transparent z-depth-0" role="navigation">
+            <div class="nav-wrapper container">
+                <a href="javascript:goBack()" class="sidenav-trigger">
+                    <i class="material-icons">arrow_back</i>
+                </a>
+                <div class="brand-logo">
+
+                    <h5>
+                        <a href="./" id="logo-container">
+                            <b>football</b>news
+                        </a>
+                    </h5>
+                </div>
+            </div>
+        </nav>
+        <!-- Akhir Navigasi -->
+    </div>
+
+    <!-- Body content -->
+    <div class="no-padding" id="body-content">
+
+        <div class="col s12 m12">
+            <div id="fabFav" class="fixed-action-btn">
+                <a class="btn-floating btn-large blue-grey darken-4">
+                    <i id="iconFav" class="large material-icons">favorite_border</i>
+                </a>
+            </div>
+            <div class="row" id="matchesDetail"></div>
+        </div>
+    </div>
+
+
+    <script src="js/jquery-3.4.1.min.js"></script>
+    <script src="js/materialize.min.js"></script>
+    <script type="text/javascript" src="https://unpkg.com/snarkdown@1.0.2/dist/snarkdown.umd.js"></script>
+    <!-- <script src="js/nav.js"></script> -->
+    <script src="js/notification.js"></script>
+    <script src="js/api.js"></script>
+    <script src="js/idb.js"></script>
+    <script src="js/db.js"></script>
+    <script src="js/standings.js"></script>
+    <script src="js/matches.js"></script>
+
+    <script type="text/javascript">
+        function goBack() {
+            window.history.back();
+        }
+    </script>
+
+    <script type="text/javascript">
+        // mengecek serviceWorker
+        if (!('serviceWorker' in navigator)) {
+            console.log("Service Worker tidak didukung di browser ini");
+        } else {
+            registerServiceWorker();
+        }
+
+        function registerServiceWorker() {
+            return navigator.serviceWorker.register('service-worker.js')
+                .then(function(registration) {
+                    console.log("Registasi service worker berhasil.");
+                    return registration;
+                })
+                .catch(function(err) {
+                    console.log("Registrasi service worker gagal", err);
+                });
+        }
+
+        document.addEventListener("DOMContentLoaded", function() {
+            var urlParams = new URLSearchParams(window.location.search);
+            var id = Number(urlParams.get("id"));
+            var isFavorit = false
+            checkData("matchFavorite", id).then((msg) => {
+                console.log("statusData: resolve = " + msg)
+                document.getElementById("iconFav").innerHTML = "favorite"
+                getSavedDataById("pertandingan")
+                isFavorit = true
+            }).catch((msg) => {
+                console.log("statusData: reject = " + msg)
+                document.getElementById("iconFav").innerHTML = "favorite_border"
+                getMatchesDetail()
+                isFavorit = false
+            })
+
+            var iconFav = document.getElementById("iconFav");
+
+            iconFav.onclick = function() {
+                console.log("Tombol FAB di klik.");
+                if (isFavorit) {
+                    rmFavoriteData("matchFavorite", id);
+                    isFavorit = false
+                } else {
+                    item = getMatchesDetail();
+                    item.then(function(pertandingan) {
+                        createDataFav("pertandingan", pertandingan);
+                    });
+                    isFavorit = true
+                }
+            };
+        });
+    </script>
+</body>
+
+</html>

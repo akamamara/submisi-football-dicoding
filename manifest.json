@@ -1,0 +1,15 @@
+{
+    "name": "football news",
+    "short_name": "football news",
+    "description": "Aplikasi PWA Penampil Berita Sepak Bola yang diperuntukan untuk submisi dicoding.",
+    "start_url": "/index.html",
+    "display": "standalone",
+    "background_color": "#252525",
+    "theme_color": "#F5F5F5",
+    "icons": [{
+        "src": "icon.png",
+        "sizes": "512x512",
+        "type": "image/png"
+    }],
+    "gcm_sender_id": "1083178825172"
+}
